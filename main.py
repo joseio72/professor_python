@@ -1,21 +1,136 @@
 # Professor Python
-
-
-# Todos
-# First , Put the flash cards into a  strage file like json.FileExistsError
-# Then begin the termial program that will help you  study your flash cards.
-# # edit exsitiing cards an add new ones
-# maybe break up cards by lessons or topic.
-
+# The purpose of this program is to test the retention of information.
+# Take a test on Indivdual Lessons
+# Take a test on all matiral
+# add new matiral
+# edit or remove old matiral
 
 import json
+import typer
+from typing_extensions import Annotated
+import os
+from rich.pretty import pprint
+from rich import print
+from datetime import datetime
+import shutil
+from rich.columns import Columns
 
 
-def main(obj):
-    with open(file='./flashCards.json', mode='w') as file:
-        json.dump(obj=obj, fp=file, indent=4)
+NAME_OF_MATERIAL = 'CS0-003'
+MATERIALS = 'material.json'
+app = typer.Typer(no_args_is_help=True)
+
+
+def backup_json_file(backup_extension='.bak'):
+    try:
+        if not os.path.isfile(MATERIALS):
+            print("File not found.")
+            return
+        utc_timestamp = str(datetime.utcnow().timestamp())
+        backup_file = MATERIALS + utc_timestamp + backup_extension
+        shutil.copyfile(MATERIALS, backup_file)
+        print(f"Backup created: {backup_file}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+@app.command()
+def materials_structure(name: str):
+    """
+
+    add  new section to the core material by adding the header of a new lesson.
+    The meaning of lesson and chapter are the same here.
+    """
+    # First gather the materials
+    return
+
+
+@app.command()
+def choose_lesson():
+    with open(MATERIALS, 'r+b') as file:
+        jsn = json.load(file)
+        pprint(jsn, expand_all=True)
+        file.close()
+    return
+
+
+@app.command()
+def login(
+        name: str,
+        email: Annotated[str, typer.Option(prompt=True)],
+        ):
+    print(f"Hello {name}, your email is {email}")
+    return
+
+
+@app.command()
+def backup_material() -> None:
+    """
+    Command to backup the core matiral. name of the file will be matiral<UTC>.json.bak
+    """
+# Get current UTC time
+    backup_json_file()
+    return
+
+
+@app.command()
+def show_lessons() -> None:
+    """
+    Display a colum of all curret lessons
+    """
+    material = None
+    with open(MATERIALS, 'r+b') as jsonFile:
+        material = json.load(jsonFile)
+    lessons = material[NAME_OF_MATERIAL].keys()
+    columns = Columns(lessons, equal=True, expand=True)
+    print(columns)
+    return
+
+
+@app.command()
+def create_Lesson(lesson_name: str):
+    """
+    arg name of new section or chapter. Command with format the name to \
+replace spacing with '_' and lower the text capitalization.
+    add new section to the core material by adding the header of a new lesson.
+    """
+    # Prep the name of the new lesson.name
+    # By replacing all the spacing with underscores
+    name = lesson_name.replace(' ', '_')
+    name.lower()
+    # First gather the materials
+    print(name)
+    material = None
+    with open(MATERIALS, 'r+b') as jsonFile:
+        material = json.load(jsonFile)
+    print(material)
+
+    # Next add in the name of the new lesson
+    material[name] = {}
+    print(material)
+    # Last Write the new file.
+    with open(MATERIALS, 'w+b') as jsonFile:
+        json.dumps(obj=material, fp=jsonFile)
+    return
+
+
+@app.command()
+def create_topic(name: str):
+    """
+    add new section to the core material by adding the header of a new lesson.
+    """
+    # First gather the materials
+    print(name)
+    material = None
+    with open(MATERIALS, 'r+b') as jsonFile:
+        material = json.load(jsonFile)
+    print(material)
     return
 
 
 if __name__ == "__main__":
-    main()
+    files = os.getcwd()
+    dir = os.listdir(path='.')
+    print(dir)
+    print(files)
+    app()
