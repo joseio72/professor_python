@@ -66,9 +66,9 @@ def login(
 @app.command()
 def backup_material() -> None:
     """
-    Command to backup the core matiral. name of the file will be matiral<UTC>.json.bak
+    Command to backup the core matiral.
+    Name of the file will be matiral<UTC>.json.bak
     """
-# Get current UTC time
     backup_json_file()
     return
 
@@ -91,26 +91,25 @@ def show_lessons() -> None:
 def create_Lesson(lesson_name: str):
     """
     arg name of new section or chapter. Command with format the name to \
-replace spacing with '_' and lower the text capitalization.
+    lower the text capitalization.
     add new section to the core material by adding the header of a new lesson.
     """
+    backup_json_file()
     # Prep the name of the new lesson.name
-    # By replacing all the spacing with underscores
-    name = lesson_name.replace(' ', '_')
-    name.lower()
+    lesson_name.lower()
     # First gather the materials
-    print(name)
     material = None
     with open(MATERIALS, 'r+b') as jsonFile:
+        # TO DO
+        # Some day we want to pull the most recent .bak in case of failure.
         material = json.load(jsonFile)
-    print(material)
 
     # Next add in the name of the new lesson
-    material[name] = {}
+    material[NAME_OF_MATERIAL][lesson_name] = {}
     print(material)
     # Last Write the new file.
-    with open(MATERIALS, 'w+b') as jsonFile:
-        json.dumps(obj=material, fp=jsonFile)
+    with open(MATERIALS, 'w') as jsonFile:
+        json.dump(obj=material, fp=jsonFile, indent=4)
     return
 
 
@@ -131,6 +130,6 @@ def create_topic(name: str):
 if __name__ == "__main__":
     files = os.getcwd()
     dir = os.listdir(path='.')
-    print(dir)
     print(files)
+    print(dir)
     app()
