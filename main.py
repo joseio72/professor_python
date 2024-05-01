@@ -13,41 +13,56 @@ from rich.pretty import pprint
 from rich import print
 from datetime import datetime
 import shutil
+from typing import Optional
 from rich.columns import Columns
 
-
-NAME_OF_MATERIAL = 'CS0-003'
-MATERIALS = 'material.json'
 app = typer.Typer(no_args_is_help=True)
 
+MATERIAL_FILE_NAME = 'material'
+NAME_OF_MATERIAL = 'CS0-003'
+cwd = os.getcwd()
+BACKUP_DESTINATION = '.bak'
+PWD_FILES = os.listdir(path='.')
 
-def backup_json_file(backup_extension='.bak'):
+
+def move_old_backup():
+    # Create the destination directory if it doesn't exist
+    if not os.path.exists(BACKUP_DESTINATION):
+        os.makedirs(BACKUP_DESTINATION)
+    # Iterate through the files of the dir
+    for file in PWD_FILES:
+        # Check if the file starts with 'file_'
+        if file.startswith(MATERIAL_FILE_NAME + '_'):
+            # Construct the full path of the destination file
+            destination_file = os.path.join(BACKUP_DESTINATION, file)
+            # Move the file to the destination directory
+            shutil.move(file, destination_file)
+            print(f"Moved {file} to {BACKUP_DESTINATION}")
+
+
+def backup_json_file(extension: str) -> None:
     try:
-        if not os.path.isfile(MATERIALS):
+        # Just check if the file is in the Dir
+        if not os.path.isfile(MATERIAL_FILE_NAME + extension):
             print("File not found.")
             return
+
+        # First move the cureent backup to the bak folder.
+        move_old_backup()
+
+        # Last Create the new backup file.
         utc_timestamp = str(datetime.utcnow().timestamp())
-        backup_file = MATERIALS + utc_timestamp + backup_extension
-        shutil.copyfile(MATERIALS, backup_file)
+        backup_file = MATERIAL_FILE_NAME + '_' + utc_timestamp + extension
+        shutil.copyfile(MATERIAL_FILE_NAME + extension, backup_file)
         print(f"Backup created: {backup_file}")
     except Exception as e:
         print(f"An error occurred: {e}")
 
 
 @app.command()
-def materials_structure(name: str):
-    """
-
-    add  new section to the core material by adding the header of a new lesson.
-    The meaning of lesson and chapter are the same here.
-    """
-    # First gather the materials
-    return
-
-
-@app.command()
 def choose_lesson():
-    with open(MATERIALS, 'r+b') as file:
+    # Want enter a lesson and work from there let use EXplore this idea.
+    with open(MATERIAL_FILE_NAME, 'r+b') as file:
         jsn = json.load(file)
         pprint(jsn, expand_all=True)
         file.close()
@@ -59,31 +74,35 @@ def login(
         name: str,
         email: Annotated[str, typer.Option(prompt=True)],
         ):
+    """
+    Soon Login information for users to learn about Indivdual topics
+    """
     print(f"Hello {name}, your email is {email}")
     return
 
 
 @app.command()
-def backup_material() -> None:
+def backup(
+        backup_extension:
+        Annotated[Optional[str], typer.Argument()] = '.json') -> None:
     """
     Command to backup the core matiral.
-    Name of the file will be matiral<UTC>.json.bak
+    Name of the file will be matiral<UTC>.json
     """
-    backup_json_file()
+    backup_json_file(extension=backup_extension)
     return
 
 
 @app.command()
-def show_lessons() -> None:
+def Challenge(
+        test_length: Annotated[Optional[int], typer.Argument()] = 10
+        ):
     """
-    Display a colum of all curret lessons
+    argument determinds the length of the  test.
+    test is comprised of learning material with Question and answer.
     """
-    material = None
-    with open(MATERIALS, 'r+b') as jsonFile:
-        material = json.load(jsonFile)
-    lessons = material[NAME_OF_MATERIAL].keys()
-    columns = Columns(lessons, equal=True, expand=True)
-    print(columns)
+
+    
     return
 
 
@@ -99,7 +118,7 @@ def create_Lesson(lesson_name: str):
     lesson_name.lower()
     # First gather the materials
     material = None
-    with open(MATERIALS, 'r+b') as jsonFile:
+    with open(MATERIAL_FILE_NAME, 'r+b') as jsonFile:
         # TO DO
         # Some day we want to pull the most recent .bak in case of failure.
         material = json.load(jsonFile)
@@ -108,28 +127,12 @@ def create_Lesson(lesson_name: str):
     material[NAME_OF_MATERIAL][lesson_name] = {}
     print(material)
     # Last Write the new file.
-    with open(MATERIALS, 'w') as jsonFile:
+    with open(MATERIAL_FILE_NAME, 'w') as jsonFile:
         json.dump(obj=material, fp=jsonFile, indent=4)
     return
 
 
-@app.command()
-def create_topic(name: str):
-    """
-    add new section to the core material by adding the header of a new lesson.
-    """
-    # First gather the materials
-    print(name)
-    material = None
-    with open(MATERIALS, 'r+b') as jsonFile:
-        material = json.load(jsonFile)
-    print(material)
-    return
-
-
 if __name__ == "__main__":
-    files = os.getcwd()
-    dir = os.listdir(path='.')
-    print(files)
+    print(PWD_FILES)
     print(dir)
     app()
