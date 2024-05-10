@@ -1,0 +1,8 @@
+{
+  "Lesson_number": 3,
+  "Lesson_name": "Explaining Important System and Network Architecture Concepts",
+  "Topic": "Maintaining Operational Visibility",
+  "SubTopic": "Understand the role of public key infrastructure (PKI)",
+  "Public Key Infrastructure": "Offers the opportunity to centralize digital certicate standards.I issues digital certificates guaranteed by a trusted certificate authority (CA)",
+  "Secure Sockets Layer (SSL) inspection": "process of inspecting encrypted HTTPS traffic. SSL inspection also helps enforce organizational policies, ensuring that employees comply with acceptable use policies and do not attempt to access restricted content or share/upload restricted data."
+}

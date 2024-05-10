@@ -1,0 +1,11 @@
+{
+  "Lesson_number": 3,
+  "Lesson_name": "Explaining Important System and Network Architecture Concepts",
+  "Topic": "Maintaining Operational Visibility",
+  "SubTopic": "Explain different data types",
+  "Personally Identifiable Information (PII)": "Describes sensitive PPI such as US social security numbers, biometrics, financial records, medical records, immigration identifiers, etc.",
+  "Protected health information (PHI)": "wide range of information and includes not only patients but also doctors and healthcare systems. It describes information about past,  present, or future health, as well as related payments.",
+  "Personal Identifiable financial information (PIFL)": "payment history, credit ratings, and financial statements. other thing like account numbers, credit/debt card numbers, personal information. ",
+  "Card holder Data": "related to the owner of a payment card. cardholder name, card number, billing adress.and privacy regulations such as Payment Card Industry Data Security Standard (PCI DSS), the General Data Protection Regulation (GDPR), Gramm-Leach-Bliley Act (GLBA), and others.",
+  "Intellectual property": "Intangible products of human thought and ingenuity. copyrights patents, trademarks, and trade secretss. Often represents vast sums of investment money, research and time."
+}
