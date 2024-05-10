@@ -1,10 +1,10 @@
 {
+  "exam code": "CS0-003",
+  "certification": "CSA+",
   "Lesson_number": 1,
   "Lesson_name": "Understanfing Vulnerability Reponse, Handling, and Management",
   "Topic": "Understanding Cybersecurity Leadership Concepts",
   "SubTopic": "Exploring Threat Actor Concepts",
   "Cyber security leader": "Responsible for the vison and setting the goals that the team uses to secure an organization's assets. Understand technical and legal to give the best advise for approaching different types of appropriate levels of protection. They should have the ability to make fast decisions based on industry standards and changes, with strong clear communitcation to everyone.",
-  "Policy and procedures":  "Referred to a roadmap meaning the tools that give guidance and clear direction. The [[Glossary|**Security Operation Center SOC**
-]
-], use these well crafted policies and procedures that define response action. Established, incident-handling practices that give a thing to do and remove the need to think in high pressure moments. It gives employees a guild for them to have consistent and reliable steps to take for high performance.
+  "Policy and procedures": "Referred to a roadmap meaning the tools that give guidance and clear direction. These well crafted policies and procedures that define response action. Established, incident-handling practices that give a thing to do and remove the need to think in high pressure moments. It gives employees a guild for them to have consistent and reliable steps to take for high performance."
 }
