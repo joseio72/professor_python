@@ -3,13 +3,13 @@
   "certification": "CSA+",
   "Lesson_number": 3,
   "Lesson_name": "Explaining Important System and Network Architecture Concepts",
-  "SubTopic": "Explain logging concepts",
   "Topic": "Maintaining Operational Visibility",
+  "SubTopic": "Explain logging concepts",
   "log ingestion": "describes collecting log data from multiple sources, such as authentication servers, application servers, web servers, and databases, and storing it in a centralized location for analysis.",
   "Time Synchronization": " ensures that computer systems have accurate system time and time-related information by synchronizing the system time with a reference time source",
-  "DEBUG": "used for debugging purposes",
-  "INFO": "used for informative messages",
-  "WARNING": " used to indicate a potential problem",
-  "ERROR": " used to indicate a serious problem",
-  "CRITICAL": " used to indicate a critical problem"
+  "DEBUG": "Used for debugging purposes",
+  "INFO": "Used for informative messages",
+  "WARNING": " Used to indicate a potential problem",
+  "ERROR": " Used to indicate a serious problem",
+  "CRITICAL": " Used to indicate a critical problem"
 }
