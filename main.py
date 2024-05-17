@@ -17,16 +17,16 @@ from rich.columns import Columns
 CALL_RANDIT = lambda x: random.randint(0,len(x)-1)
 
 
-def randomSubTopicObject(selected_SubTopic):
-    sub_topic = None
-    with open(selected_SubTopic, 'r+b') as jsonFile:
-        sub_topic = json.load(jsonFile)
-    return sub_topic
+def randomTopicObject(bookTopic):
+    topic = None
+    with open(bookTopic, 'r+b') as jsonFile:
+        topic = json.load(jsonFile)
+    return topic
 
 
 def Challenge(
         topic: dict = None,
-        multiple_choice_number : int = 5
+        multiple_choice_number : int = 4
         ):
     """
     argument determinds the length of the  test and the content we are testing on
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     for _ in range(test_length):
         content = [i for i in os.listdir() if i.endswith('.json')]
         randomContentIndex = CALL_RANDIT(content)
-        sub_topic = randomSubTopicObject(content[randomContentIndex])
-        item, source = Challenge(sub_topic)
-        print(source)
+        topic = randomTopicObject(content[randomContentIndex])
+        item, metadata = Challenge(topic)
+        print(metadata)
         print(item)

@@ -5,6 +5,7 @@
   "Lesson_name": "Explaining Important System and Network Architecture Concepts",
   "Topic": "Maintaining Operational Visibility",
   "SubTopic": "Explain logging concepts",
+
   "log ingestion": "describes collecting log data from multiple sources, such as authentication servers, application servers, web servers, and databases, and storing it in a centralized location for analysis.",
   "Time Synchronization": " ensures that computer systems have accurate system time and time-related information by synchronizing the system time with a reference time source",
   "DEBUG": "Used for debugging purposes",
