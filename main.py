@@ -6,16 +6,25 @@
 import json
 from os.path import isfile
 from re import sub
-import os
 import random
 from rich.pretty import pprint
 from rich import print
+from rich.console import Console
 from datetime import datetime
+from rich.prompt import Prompt
+from rich import print
+from rich.layout import Layout
+from rich.text import Text
 import shutil
-from rich.columns import Columns
+from rich import box
+from rich.traceback import install
+from rich.panel import Panel
 
-CALL_RANDIT = lambda x: random.randint(0,len(x)-1)
 
+            
+import time
+
+install(show_locals=True)
 
 def randomTopicObject(bookTopic):
     topic = None
@@ -24,57 +33,88 @@ def randomTopicObject(bookTopic):
     return topic
 
 
-def Challenge(
+def question(
         topic: dict = None,
         multiple_choice_number : int = 4
         ):
     """
-    argument determinds the length of the  test and the content we are testing on
-    test is comprised of learning material with Question and answer.
-
+    Function is in charge of making a question. 
+    given the content and a number.
     """
+
     if not topic: return
 
-    admin_headers = {key: sub_topic[key] for key in list(topic.keys())[:6]}
+    items = topic.items()
 
-    content = {key: sub_topic[key] for key in list(topic.keys())[6:]}
+    content = list(items)[4:]
 
-    topic_keys = list(content.keys())
-
-    topic_values = list(content.values())
-
-    item={
+    question={
         'stem': '',
         'key':'',
         'alternatives':[],
     }
 
     #if random.choice([True,False]):
-    used_indexs = []
     if True: 
-        index = CALL_RANDIT(topic_keys)
-        print(index)
-        item['stem'] = topic_keys[index]  
-        item['key'] = topic_values[index] 
-        i = 0
+        index = random.randint(0,len(content))
+        question['stem'] = content[index][0]
+        question['key'] = content[index][1]
+
+        i = 1
+        used_indexs = []
         while i < multiple_choice_number:
-            alt_index =  CALL_RANDIT(topic_values)
-            if index == alt_index or alt_index in used_indexs: 
-                print(used_indexs)
+            alternatives_index = random.randint(0,len(content))
+            if index == alternatives_index or alternatives_index in used_indexs: 
                 continue
-            item['alternatives'].append(topic_values[alt_index])
-            used_indexs.append(alt_index)
+            question['alternatives'].append(content[alternatives_index][1])
+            used_indexs.append(alternatives_index)
             i+=1 
-    return item , admin_headers
+
+    return question , dict(list(items)[:4])
+
 
 if __name__ == "__main__":
-
+    console = Console()
+    console.clear() # Just to start the program with a fresh console
     score = 0 
     test_length = 10
+    topic = randomTopicObject('./glossary.json')
+
     for _ in range(test_length):
-        content = [i for i in os.listdir() if i.endswith('.json')]
-        randomContentIndex = CALL_RANDIT(content)
-        topic = randomTopicObject(content[randomContentIndex])
-        item, metadata = Challenge(topic)
-        print(metadata)
-        print(item)
+        item, metadata = question(topic)
+
+        header_title = Text(metadata['lesson'], justify='center')
+        header_title.stylize("bold", 0, 6)
+        header_subtitle = Text(metadata['topic'], justify='center')
+        header_subtitle.stylize("bold", 0, 6)
+
+        print('\n')
+        print(Panel(header_title,
+                    title=f"{metadata['certification']} - {metadata['exam code']}",
+                    subtitle=header_subtitle))
+        print('\n')
+
+
+        question = Text(item['stem'], justify='center')
+        print(Panel(question,title="Question"))
+        print('\n')
+
+        index = random.randint(0, len(item['alternatives']))
+
+        item['alternatives'].insert(index, item['key'])
+        
+        multiple_choices = list(zip(["A","B","C","D"],item['alternatives']))
+        
+        for choice in range(len(multiple_choices)):
+            multiple_choice_option = Text(multiple_choices[choice][1], justify='center')
+            print(Panel(multiple_choice_option,title=multiple_choices[choice][0]))
+
+
+
+
+        choice = Prompt.ask("your ans? ", choices=["D","C", "B", "A"], default="None")
+        print(choice)
+        console.clear()
+
+
+
