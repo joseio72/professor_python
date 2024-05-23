@@ -85,7 +85,7 @@ if __name__ == "__main__":
     console = Console()
     console.clear()  # Just to start the program with a fresh console
     answered_questions = []
-    score = 0
+    score_track = {"wrong": [], "right": [], "score": 0}
     test_length = 10
     topic = randomTopicObject("./glossary.json")
 
@@ -119,10 +119,10 @@ if __name__ == "__main__":
 
         for choice in range(len(multiple_choices)):
             multiple_choice_option = Text(multiple_choices[choice][1], justify="center")
+            print("\n")
             print(Panel(multiple_choice_option, title=multiple_choices[choice][0]))
 
         prompt_answer = Prompt.ask("ans?", choices=["a", "b", "c", "d", "exit"])
-        # prompt_answer = "a"
 
         if prompt_answer == "exit":
             # save and close.
@@ -130,18 +130,24 @@ if __name__ == "__main__":
 
         # Now we check for a match. if good add to he score else no points.
         for i, choice in enumerate(multiple_choices):
-            if prompt_answer == choice[0]:  # Finding the answer index
+            if prompt_answer != choice[0]:
+                # we are looking for the choice that is what the user input.
+                continue
+            if i != correct_index:
+                score_track["wrong"].append((item["stem"]))
+            else:
                 # Then Checking truth
-                if i == correct_index:
-                    score += 1
-                    break
-            continue
-
+                score_track["right"].append((item["key"]))
+                score_track["score"] += 1
+                break
         console.clear()
 
+    console.clear()
     # We print and save the score!!!!
-    final_score = Text(str(score), justify="center")
+    final_score = Text(str(score_track["score"]), justify="center")
 
+    print("\n")
+    print("\n")
     print("\n")
     print(
         Panel(
@@ -150,4 +156,11 @@ if __name__ == "__main__":
         )
     )
     print("\n")
-    print("\n")
+    for item in score_track["wrong"]:
+        item_number = Text(item, justify="center")
+        print("\n")
+        print(Panel(item_number, title="wrong"))
+    for item in score_track["right"]:
+        item_number = Text(item, justify="center")
+        print("\n")
+        print(Panel(item_number, title="right"))
