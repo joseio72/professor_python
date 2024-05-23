@@ -3,6 +3,7 @@
 # Take a test on all material
 # Track Scores on material
 
+import sys
 import json
 from os.path import isfile
 from re import sub
@@ -19,102 +20,134 @@ import shutil
 from rich import box
 from rich.traceback import install
 from rich.panel import Panel
-
-
-            
 import time
 
 install(show_locals=True)
 
+
 def randomTopicObject(bookTopic):
     topic = None
-    with open(bookTopic, 'r+b') as jsonFile:
+    with open(bookTopic, "r+b") as jsonFile:
         topic = json.load(jsonFile)
     return topic
 
 
 def question(
-        topic: dict = None,
-        multiple_choice_number : int = 4
-        ):
+    used_keys,
+    topic: dict = None,
+    multiple_choice_number: int = 4,
+):
     """
-    Function is in charge of making a question. 
+    Function is in charge of making a question.
     given the content and a number.
     """
 
-    if not topic: return
+    if not topic:
+        return
 
-    items = topic.items()
+    topic_items = topic.items()
 
-    content = list(items)[4:]
+    content = list(topic_items)[4:]
 
-    question={
-        'stem': '',
-        'key':'',
-        'alternatives':[],
+    question = {
+        "stem": "",
+        "key": "",
+        "alternatives": [],
     }
 
-    #if random.choice([True,False]):
-    if True: 
-        index = random.randint(0,len(content))
-        question['stem'] = content[index][0]
-        question['key'] = content[index][1]
+    rand_index = random.randint(0, len(content))
+    # Here I want to make sure the question is not asked twice in a sinlge test.
+    while rand_index in used_keys:
+        rand_index = random.randint(0, len(content))
+    used_keys.append(rand_index)
 
-        i = 1
-        used_indexs = []
-        while i < multiple_choice_number:
-            alternatives_index = random.randint(0,len(content))
-            if index == alternatives_index or alternatives_index in used_indexs: 
-                continue
-            question['alternatives'].append(content[alternatives_index][1])
-            used_indexs.append(alternatives_index)
-            i+=1 
+    set_up = random.choice([True, False])
 
-    return question , dict(list(items)[:4])
+    question["stem"] = content[rand_index][set_up]
+    question["key"] = content[rand_index][not set_up]
+
+    i = 1
+    used_alternate_indexs = []
+    while i < multiple_choice_number:
+        alternatives_index = random.randint(0, len(content))
+        if (
+            alternatives_index == rand_index
+            or alternatives_index in used_alternate_indexs
+        ):
+            continue
+        question["alternatives"].append(content[alternatives_index][not set_up])
+        used_alternate_indexs.append(alternatives_index)
+        i += 1
+    return question, dict(list(topic_items)[:4])
 
 
 if __name__ == "__main__":
     console = Console()
-    console.clear() # Just to start the program with a fresh console
-    score = 0 
+    console.clear()  # Just to start the program with a fresh console
+    answered_questions = []
+    score = 0
     test_length = 10
-    topic = randomTopicObject('./glossary.json')
+    topic = randomTopicObject("./glossary.json")
 
     for _ in range(test_length):
-        item, metadata = question(topic)
+        item, metadata = question(used_keys=answered_questions, topic=topic)
 
-        header_title = Text(metadata['lesson'], justify='center')
+        header_title = Text(metadata["lesson"], justify="center")
         header_title.stylize("bold", 0, 6)
-        header_subtitle = Text(metadata['topic'], justify='center')
+        header_subtitle = Text(metadata["topic"], justify="center")
         header_subtitle.stylize("bold", 0, 6)
 
-        print('\n')
-        print(Panel(header_title,
-                    title=f"{metadata['certification']} - {metadata['exam code']}",
-                    subtitle=header_subtitle))
-        print('\n')
+        print("\n")
+        print(
+            Panel(
+                header_title,
+                title=f"{metadata['certification']} - {metadata['exam code']}",
+                subtitle=header_subtitle,
+            )
+        )
+        print("\n")
 
+        stem = Text(item["stem"], justify="center")
+        print(Panel(stem, title="Question"))
+        print("\n")
 
-        question = Text(item['stem'], justify='center')
-        print(Panel(question,title="Question"))
-        print('\n')
+        correct_index = random.randint(0, len(item["alternatives"]))
 
-        index = random.randint(0, len(item['alternatives']))
+        item["alternatives"].insert(correct_index, item["key"])
 
-        item['alternatives'].insert(index, item['key'])
-        
-        multiple_choices = list(zip(["A","B","C","D"],item['alternatives']))
-        
+        multiple_choices = list(zip(["a", "b", "c", "d"], item["alternatives"]))
+
         for choice in range(len(multiple_choices)):
-            multiple_choice_option = Text(multiple_choices[choice][1], justify='center')
-            print(Panel(multiple_choice_option,title=multiple_choices[choice][0]))
+            multiple_choice_option = Text(multiple_choices[choice][1], justify="center")
+            print(Panel(multiple_choice_option, title=multiple_choices[choice][0]))
 
+        prompt_answer = Prompt.ask("ans?", choices=["a", "b", "c", "d", "exit"])
+        # prompt_answer = "a"
 
+        if prompt_answer == "exit":
+            # save and close.
+            sys.exit()
 
+        # Now we check for a match. if good add to he score else no points.
+        for i, choice in enumerate(multiple_choices):
+            if prompt_answer == choice[0]:  # Finding the answer index
+                # Then Checking truth
+                if i == correct_index:
+                    score += 1
+                    break
+            continue
 
-        choice = Prompt.ask("your ans? ", choices=["D","C", "B", "A"], default="None")
-        print(choice)
         console.clear()
 
+    # We print and save the score!!!!
+    final_score = Text(str(score), justify="center")
 
-
+    print("\n")
+    print(
+        Panel(
+            final_score,
+            title="!Score!",
+        )
+    )
+    print("\n")
+    print("\n")
