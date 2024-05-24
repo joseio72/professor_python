@@ -1,0 +1,15 @@
+{ 
+"exam code": "CS0-003",
+"certification": "CSA+",
+"lesson": 2,
+"lesson_name": "Exploring Threat Intelligence and Threat Hunting Concepts",
+"topic": "2A",
+"topic_name": "Exploring Threat Actor Concepts",
+"Threat Intelligence": "The strategies used to detect and protect against active threats by gatheing and analyzing data to help identify potential threats and determine the most effective way to mitigate them.",
+"Threat Actors": "Represent a group, person, or organization responsible for malicious activities.",
+"Threat Hunting": "Describes actively searching for signs of malicious activity on a network. Log files and monitoring suspicious traffic. Their MO is financial gain, political gain, or simply to cause harm.",
+"Supply Chain Access":"A common trend observed in attacks involves identifying the vendors and/or products an organization uses on an ongoing basis",
+"Nation-states":"This threat actor group is generally associated with advanced persistent threats.",
+"Anti-forensics":"After gaining unauthorized access, an attacker takes time to remove evidence of the actions they performed.",
+"MITRE ATT&CK":"This framework provides very detailed documentation regarding threat actor tactics, techniques, and procedures.",
+}

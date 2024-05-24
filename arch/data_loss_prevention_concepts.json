@@ -1,0 +1,23 @@
+{
+  "exam code": "CS0-003",
+  "certification": "CSA+",
+  "Lesson_number": 3,
+  "Lesson_name": "Explaining Important System and Network Architecture Concepts",
+  "Topic": "Maintaining Operational Visibility",
+  "SubTopic": "Data Loss Prevention Concepts",
+  "Data loss prevention (DLP)": "These products help automate dicovery and classification of data types and enforce rules to restrict unauthorized viewing.",
+  "Policy Server": "Used to configure classification, confidentiality, privacy rules and policies, and to log indidents and compile reports.",
+  "Endpoint Agents": "Used to enforce policy on client computers regardless of edge connection",
+  "Network Agents": "Scan communications at network borders and interfaces with web and messaging servers to enforce policy.",
+  "Remediation": "The action that DLP software takes when it detects a policy violation.",
+  "Alert only": "DPL remediation that states copying is allowed, but the management system records an incident and may alert an admin.",
+  "Block": "DPL remediation that prevents a user from copying the original file but retains access to it. It may or may not alert a policy violation, but will be logged as an incident by the management engine.",
+  "Quarantine": "Acess to the original file is denied to the user and maybe others. Might be done be encrypting the file in place or by moving it to a Quarantine area of the file system.",
+  "Tombstone": "DLP remediation that quarantines the original file and replaces it with one discribing the policy violoation and how a user can release it again.",
+  "Blocking use of external Media": "Preventing sensitive data from being copied to external drives and USB flash stroage.",
+  "print Blocking": "preventing the printing of sensitive information or controlled documnets. This is important in the health industry.",
+  "Remote Desktop protocol (RDP) Blocking": "RDP allows data to be copied and pasted from the session. DLP can be configured to monitor and block this when sensitive data is detected.",
+  "ClipBorad privacy controls": "Limiting access to the clipborad and preventing sensitive data from being placed on the clipboard for use elsewhere.",
+  "Restricted Virtual Desktop Infrastructure (VDI) implementation": "Incorporating DLP features within the underlying VDI infrastructure to protect all virtual desktops and govern how data is used and shared in the environment.",
+  "Data classification blocking": "Using Metadata or other mechanisms to tad data with its classification in order to limit how it can be acessed."
+}
