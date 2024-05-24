@@ -90,6 +90,8 @@ if __name__ == "__main__":
     topic = randomTopicObject("./glossary.json")
 
     for _ in range(test_length):
+        console.clear()
+
         item, metadata = question(used_keys=answered_questions, topic=topic)
 
         header_title = Text(metadata["lesson"], justify="center")
@@ -140,7 +142,6 @@ if __name__ == "__main__":
                 score_track["right"].append((item["key"]))
                 score_track["score"] += 1
                 break
-        console.clear()
 
     console.clear()
     # We print and save the score!!!!
