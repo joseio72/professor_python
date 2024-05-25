@@ -15,6 +15,7 @@ from datetime import datetime
 from rich.prompt import Prompt
 from rich import print
 from rich.layout import Layout
+from datetime import datetime, timezone
 from rich.text import Text
 import shutil
 from rich import box
@@ -25,29 +26,15 @@ import time
 install(show_locals=True)
 
 
-def randomTopicObject(bookTopic):
-    topic = None
-    with open(bookTopic, "r+b") as jsonFile:
-        topic = json.load(jsonFile)
-    return topic
-
-
 def question(
     used_keys,
-    topic: dict = None,
+    content: dict = None,
     multiple_choice_number: int = 4,
 ):
     """
     Function is in charge of making a question.
     given the content and a number.
     """
-
-    if not topic:
-        return
-
-    topic_items = topic.items()
-
-    content = list(topic_items)[4:]
 
     question = {
         "stem": "",
@@ -78,23 +65,30 @@ def question(
         question["alternatives"].append(content[alternatives_index][not set_up])
         used_alternate_indexs.append(alternatives_index)
         i += 1
-    return question, dict(list(topic_items)[:4])
+    return question
 
 
 if __name__ == "__main__":
     console = Console()
     console.clear()  # Just to start the program with a fresh console
+
+    score = 0
     answered_questions = []
-    score_track = {"wrong": [], "right": [], "score": 0}
-    test_length = 10
-    topic = randomTopicObject("./glossary.json")
 
-    for _ in range(test_length):
-        console.clear()
+    GLOSSARY_FILENAME = "./glossary.json"
+    SCORECARD_FILENAME = "./highScore.json"
 
-        item, metadata = question(used_keys=answered_questions, topic=topic)
+    with open(GLOSSARY_FILENAME, "r+b") as jsonFile:
+        glossary_items = json.load(jsonFile)
 
-        header_title = Text(metadata["lesson"], justify="center")
+    glossary_items = glossary_items.items()
+    metadata = dict(list(glossary_items)[:4])
+    data = list(glossary_items)[4:]
+
+    for _ in range(len(data)):
+        item = question(used_keys=answered_questions, content=data)
+        print(item)
+        header_title = Text(metadata["certification"], justify="center")
         header_title.stylize("bold", 0, 6)
         header_subtitle = Text(metadata["topic"], justify="center")
         header_subtitle.stylize("bold", 0, 6)
@@ -103,12 +97,11 @@ if __name__ == "__main__":
         print(
             Panel(
                 header_title,
-                title=f"{metadata['certification']} - {metadata['exam code']}",
+                title=f"{metadata['exam code']}",
                 subtitle=header_subtitle,
             )
         )
         print("\n")
-
         stem = Text(item["stem"], justify="center")
         print(Panel(stem, title="Question"))
         print("\n")
@@ -124,8 +117,8 @@ if __name__ == "__main__":
             print("\n")
             print(Panel(multiple_choice_option, title=multiple_choices[choice][0]))
 
-        prompt_answer = Prompt.ask("ans?", choices=["a", "b", "c", "d", "exit"])
-
+        # prompt_answer = Prompt.ask("ans?", choices=["a", "b", "c", "d", "exit"])
+        prompt_answer = "a"  ### DBUGGING
         if prompt_answer == "exit":
             # save and close.
             sys.exit()
@@ -136,16 +129,40 @@ if __name__ == "__main__":
                 # we are looking for the choice that is what the user input.
                 continue
             if i != correct_index:
-                score_track["wrong"].append((item["stem"]))
+                continue
             else:
-                # Then Checking truth
-                score_track["right"].append((item["key"]))
-                score_track["score"] += 1
+                score += 1
                 break
+        score += 10
+        break
 
     console.clear()
     # We print and save the score!!!!
-    final_score = Text(str(score_track["score"]), justify="center")
+    final_score = Text(str(score), justify="center")
+
+    # adding score to others savingScrore
+
+    current_utc_time = datetime.now()
+
+    print(str(current_utc_time))
+
+    formatted_utc_time = current_utc_time.strftime("%Y-%m-%d %H:%M:%S")
+
+    print(formatted_utc_time)
+
+    # Format the datetime as a string
+
+    with open(SCORECARD_FILENAME, "r+b") as jsonFile:
+        file_context = json.load(jsonFile)
+    #
+    score_items = list(file_context.items())
+    score_items.append((formatted_utc_time, score))
+    print(score_items)
+    score_items = dict(score_items)
+    print(score_items)
+
+    with open(GLOSSARY_FILENAME, "w+b") as jsonFile:
+        json.dump(dict(score_items), jsonFile)
 
     print("\n")
     print("\n")
@@ -156,12 +173,5 @@ if __name__ == "__main__":
             title="!Score!",
         )
     )
-    print("\n")
-    for item in score_track["wrong"]:
-        item_number = Text(item, justify="center")
-        print("\n")
-        print(Panel(item_number, title="wrong"))
-    for item in score_track["right"]:
-        item_number = Text(item, justify="center")
-        print("\n")
-        print(Panel(item_number, title="right"))
+
+    ### Building Highscore Chart
