@@ -117,24 +117,19 @@ def main():
             print("\n")
             print(Panel(multiple_choice_option, title=multiple_choices[choice][0]))
 
-        # prompt_answer = Prompt.ask("ans?", choices=["a", "b", "c", "d", "exit"])
-        prompt_answer = "a"  ### DBUGGING
+        prompt_answer = Prompt.ask("ans?", choices=["a", "b", "c", "d", "exit"])
         if prompt_answer == "exit":
             # save and close.
             sys.exit()
 
         # Now we check for a match. if good add to he score else no points.
         for i, choice in enumerate(multiple_choices):
-            if prompt_answer != choice[0]:
+            if prompt_answer != choice[0] or i != correct_index:
                 # we are looking for the choice that is what the user input.
-                continue
-            if i != correct_index:
                 continue
             else:
                 score += 1
                 break
-        score += random.randint(0, 39)
-        break
 
     # We print and save the score!!!!
     current_utc_time = datetime.now()
