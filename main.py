@@ -11,6 +11,7 @@ import random
 from rich.pretty import pprint
 from rich import print
 from rich.console import Console
+from rich.table import Table
 from datetime import datetime
 from rich.prompt import Prompt
 from rich import print
@@ -24,6 +25,8 @@ from rich.panel import Panel
 import time
 
 install(show_locals=True)
+GLOSSARY_FILENAME = "./glossary.json"
+SCORECARD_FILENAME = "./highScore.json"
 
 
 def question(
@@ -42,10 +45,10 @@ def question(
         "alternatives": [],
     }
 
-    rand_index = random.randint(0, len(content))
+    rand_index = random.randint(0, len(content) - 1)
     # Here I want to make sure the question is not asked twice in a sinlge test.
     while rand_index in used_keys:
-        rand_index = random.randint(0, len(content))
+        rand_index = random.randint(0, len(content) - 1)
     used_keys.append(rand_index)
 
     set_up = random.choice([True, False])
@@ -54,9 +57,10 @@ def question(
     question["key"] = content[rand_index][not set_up]
 
     i = 1
+    print(f"content {len(content)}")
     used_alternate_indexs = []
     while i < multiple_choice_number:
-        alternatives_index = random.randint(0, len(content))
+        alternatives_index = random.randint(0, len(content) - 1)
         if (
             alternatives_index == rand_index
             or alternatives_index in used_alternate_indexs
@@ -68,16 +72,12 @@ def question(
     return question
 
 
-if __name__ == "__main__":
+def main():
     console = Console()
     console.clear()  # Just to start the program with a fresh console
 
     score = 0
     answered_questions = []
-
-    GLOSSARY_FILENAME = "./glossary.json"
-    SCORECARD_FILENAME = "./highScore.json"
-
     with open(GLOSSARY_FILENAME, "r+b") as jsonFile:
         glossary_items = json.load(jsonFile)
 
@@ -86,8 +86,8 @@ if __name__ == "__main__":
     data = list(glossary_items)[4:]
 
     for _ in range(len(data)):
+        console.clear()  # Just to start the program with a fresh console
         item = question(used_keys=answered_questions, content=data)
-        print(item)
         header_title = Text(metadata["certification"], justify="center")
         header_title.stylize("bold", 0, 6)
         header_subtitle = Text(metadata["topic"], justify="center")
@@ -133,45 +133,37 @@ if __name__ == "__main__":
             else:
                 score += 1
                 break
-        score += 10
+        score += random.randint(0, 39)
         break
 
-    console.clear()
     # We print and save the score!!!!
-    final_score = Text(str(score), justify="center")
-
-    # adding score to others savingScrore
-
     current_utc_time = datetime.now()
-
-    print(str(current_utc_time))
-
     formatted_utc_time = current_utc_time.strftime("%Y-%m-%d %H:%M:%S")
-
-    print(formatted_utc_time)
-
-    # Format the datetime as a string
 
     with open(SCORECARD_FILENAME, "r+b") as jsonFile:
         file_context = json.load(jsonFile)
-    #
     score_items = list(file_context.items())
     score_items.append((formatted_utc_time, score))
-    print(score_items)
-    score_items = dict(score_items)
-    print(score_items)
-
-    with open(GLOSSARY_FILENAME, "w+b") as jsonFile:
+    with open(SCORECARD_FILENAME, "w") as jsonFile:
         json.dump(dict(score_items), jsonFile)
 
+    console.clear()
     print("\n")
     print("\n")
     print("\n")
-    print(
-        Panel(
-            final_score,
-            title="!Score!",
-        )
-    )
+    score = sorted(score_items, key=lambda srce: srce[1], reverse=True)
 
-    ### Building Highscore Chart
+    table = Table(title="HighScores!")
+    table.add_column("Date", justify="left", style="cyan", no_wrap=True)
+    table.add_column("Score", justify="center", style="magenta")
+
+    # TOP 20 scores
+    for index, eachScore in enumerate(score):
+        table.add_row(str(eachScore[0]), str(eachScore[1]))
+        if index == 19:
+            break
+    console.print(table)
+
+
+if __name__ == "__main__":
+    main()
