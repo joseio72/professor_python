@@ -3,7 +3,6 @@
   "certification": "CSA+",
   "lesson": "Glossary Term Assessment",
   "topic": "Glossary",
-
   "active decoy": "A system designed to distract potential attackers away from an organization's critical systems and data. It creates a false environment that looks like a real system, complete with fake data, applications, and other elements. The decoy system is closely monitored to detect malicious activity and provide early warning and detailed insight into an attacker's tactics and techniques.",
   "Address SpaceLayout Randomization (ASLR)": "A technique that randomizes where components in a running application are placed in memory to protect against buffer overflows.",
   "Advanced Persistent Threat (APT)": "An attacker's ability to obtain, maintain, and diversify access to network systems using exploits and malware.",
@@ -166,7 +165,7 @@
   "tabletop exercise": "A discussion of simulated emergency situations and security incidents.",
   "tactics, techniques, and procedures (TTP)": "Analysis of historical cyberattacks and adversary actions.",
   "tcpdump command": "A command-line packet sniffing utility.",
-  "technical control": "A category of security control that is implemented as a system (hardware, software, or firmware). This may also be described as logical controls.",
+  "technical control": "A category of security control that is implemented as a system (hardware, software, or firmware).This may also be described as logical controls.",
   "threat actor": "A person or entity responsible for an event that has been identified as a security incident or as a risk.",
   "threat hunting": "A cybersecurity technique designed to detect the presence of threats that have not been discovered by normal security monitoring.",
   "threat modeling": "The process of identifying and assessing the possible threat actors and attack vectors that pose a risk to the security of an app, network, or other system.",
