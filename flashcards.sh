@@ -1,3 +1,2 @@
 #!/bin/bash
-conda activate professor 
-python3 main.py
+~/miniconda3/envs/professor/bin/python3 main.py

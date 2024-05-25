@@ -57,7 +57,6 @@ def question(
     question["key"] = content[rand_index][not set_up]
 
     i = 1
-    print(f"content {len(content)}")
     used_alternate_indexs = []
     while i < multiple_choice_number:
         alternatives_index = random.randint(0, len(content) - 1)
@@ -120,6 +119,7 @@ def main():
         prompt_answer = Prompt.ask("ans?", choices=["a", "b", "c", "d", "exit"])
         if prompt_answer == "exit":
             # save and close.
+            console.clear()
             sys.exit()
 
         # Now we check for a match. if good add to he score else no points.
