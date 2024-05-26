@@ -2,27 +2,19 @@
 # The purpose of this program is to test the retention of information.
 # Take a test on all material
 # Track Scores on material
-
-import sys
+#
+#
 import json
-from os.path import isfile
-from re import sub
 import random
-from rich.pretty import pprint
 from rich import print
 from rich.console import Console
 from rich.table import Table
 from datetime import datetime
 from rich.prompt import Prompt
-from rich import print
-from rich.layout import Layout
-from datetime import datetime, timezone
+from rich.prompt import Confirm
 from rich.text import Text
-import shutil
-from rich import box
 from rich.traceback import install
 from rich.panel import Panel
-import time
 
 install(show_locals=True)
 GLOSSARY_FILENAME = "./glossary.json"
@@ -93,6 +85,9 @@ def main():
         header_subtitle.stylize("bold", 0, 6)
 
         print("\n")
+        print("\n")
+        print("\n")
+        print("\n")
         print(
             Panel(
                 header_title,
@@ -116,20 +111,34 @@ def main():
             print("\n")
             print(Panel(multiple_choice_option, title=multiple_choices[choice][0]))
 
-        prompt_answer = Prompt.ask("ans?", choices=["a", "b", "c", "d", "exit"])
-        if prompt_answer == "exit":
+        prompt_answer = None
+        rich_confirm = False
+
+        while not rich_confirm:
+            prompt_answer = Prompt.ask("ans?", choices=["a", "b", "c", "d", "exit"])
+            rich_confirm = Confirm.ask(f"Your answer is {prompt_answer}")
+
+            if (prompt_answer == "exit") and (rich_confirm is True):
+                # save and close.
+                console.clear()
+                break
+
+            if not rich_confirm:
+                continue
+
+            # Now we check for a match. if good add to he score else no points.
+            for i, choice in enumerate(multiple_choices):
+                if prompt_answer != choice[0] or i != correct_index:
+                    # we are looking for the choice that is what the user input.
+                    continue
+                else:
+                    score += 1
+                    break
+
+        if (prompt_answer == "exit") and (rich_confirm is True):
             # save and close.
             console.clear()
-            sys.exit()
-
-        # Now we check for a match. if good add to he score else no points.
-        for i, choice in enumerate(multiple_choices):
-            if prompt_answer != choice[0] or i != correct_index:
-                # we are looking for the choice that is what the user input.
-                continue
-            else:
-                score += 1
-                break
+            break
 
     # We print and save the score!!!!
     current_utc_time = datetime.now()
