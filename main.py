@@ -79,10 +79,11 @@ def main(terms_file, score_file):
     for _ in range(len(data)):
         console.clear()  # Just to start the program with a fresh console
         item = question(used_keys=answered_questions, content=data)
-        header_title = Text(metadata["certification"], justify="center")
+        header_title = Text(
+            f'{metadata["certification"]} - {metadata["exam_code"]}', justify="center"
+        )
         header_title.stylize("bold", 0, 6)
-        header_subtitle = Text(metadata["topic"], justify="center")
-        header_subtitle.stylize("bold", 0, 6)
+        score_head = Text(f"Score {score}", justify="center")
 
         print("\n")
         print("\n")
@@ -90,9 +91,8 @@ def main(terms_file, score_file):
         print("\n")
         print(
             Panel(
-                header_title,
-                title=f"{metadata['exam code']}",
-                subtitle=header_subtitle,
+                score_head,
+                title=header_title,
             )
         )
         print("\n")
