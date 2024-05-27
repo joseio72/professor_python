@@ -111,19 +111,22 @@ def main():
             print("\n")
             print(Panel(multiple_choice_option, title=multiple_choices[choice][0]))
 
-        prompt_answer = None
         rich_confirm = False
-
         while not rich_confirm:
             prompt_answer = Prompt.ask("ans?", choices=["a", "b", "c", "d", "exit"])
-            rich_confirm = Confirm.ask(f"Your answer is {prompt_answer}")
 
-            if (prompt_answer == "exit") and (rich_confirm is True):
+            if prompt_answer == "exit":
                 # save and close.
+                rich_confirm = True
                 console.clear()
                 break
 
-            if not rich_confirm:
+            rich_confirm = Prompt.ask(
+                f"Type {prompt_answer} again to confirm you answer {prompt_answer}"
+            )
+
+            if prompt_answer != rich_confirm:
+                rich_confirm = False
                 continue
 
             # Now we check for a match. if good add to he score else no points.
@@ -140,7 +143,8 @@ def main():
             console.clear()
             break
 
-    # We print and save the score!!!!
+    console.clear()
+    # Weprint and save the score!!!!
     current_utc_time = datetime.now()
     formatted_utc_time = current_utc_time.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -151,7 +155,7 @@ def main():
     with open(SCORECARD_FILENAME, "w") as jsonFile:
         json.dump(dict(score_items), jsonFile)
 
-    console.clear()
+    # console.clear()
     print("\n")
     print("\n")
     print("\n")
