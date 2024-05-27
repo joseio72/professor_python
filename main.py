@@ -10,15 +10,15 @@ from rich import print
 from rich.console import Console
 from rich.table import Table
 from datetime import datetime
+import os
 from rich.prompt import Prompt
-from rich.prompt import Confirm
 from rich.text import Text
 from rich.traceback import install
 from rich.panel import Panel
 
 install(show_locals=True)
-GLOSSARY_FILENAME = "./glossary.json"
-SCORECARD_FILENAME = "./highScore.json"
+GLOSSARY_FILENAME = "glossary.json"
+SCORECARD_FILENAME = "highScore.json"
 
 
 def question(
@@ -63,13 +63,13 @@ def question(
     return question
 
 
-def main():
+def main(terms_file, score_file):
     console = Console()
     console.clear()  # Just to start the program with a fresh console
 
     score = 0
     answered_questions = []
-    with open(GLOSSARY_FILENAME, "r+b") as jsonFile:
+    with open(terms_file, "r+b") as jsonFile:
         glossary_items = json.load(jsonFile)
 
     glossary_items = glossary_items.items()
@@ -144,16 +144,19 @@ def main():
             break
 
     console.clear()
+
     # Weprint and save the score!!!!
     current_utc_time = datetime.now()
     formatted_utc_time = current_utc_time.strftime("%Y-%m-%d %H:%M:%S")
 
-    with open(SCORECARD_FILENAME, "r+b") as jsonFile:
+    with open(score_file, "r+b") as jsonFile:
         file_context = json.load(jsonFile)
+
     score_items = list(file_context.items())
-    score_items.append((formatted_utc_time, score))
-    with open(SCORECARD_FILENAME, "w") as jsonFile:
-        json.dump(dict(score_items), jsonFile)
+    if score > 0:
+        score_items.append((formatted_utc_time, score))
+        with open(score_file, "w") as jsonFile:
+            json.dump(dict(score_items), jsonFile)
 
     # console.clear()
     print("\n")
@@ -174,4 +177,14 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    files_in_dir = os.listdir(script_dir)
+    if GLOSSARY_FILENAME in files_in_dir and SCORECARD_FILENAME in files_in_dir:
+        score_file_path = os.path.join(script_dir, SCORECARD_FILENAME)
+        terms_file_path = os.path.join(script_dir, GLOSSARY_FILENAME)
+
+        main(terms_file=terms_file_path, score_file=score_file_path)
+    else:
+        print(
+            f"'{GLOSSARY_FILENAME}' or '{SCORECARD_FILENAME}' not found in the directory."
+        )
