@@ -11,8 +11,8 @@ create_backup() {
 # Check if no arguments are provided
 if [ $# -eq 0 ]; then
     # Backup files fisj and dpg
-    create_backup "./glossary.json"
-    create_backup "./highScore.json"
+    create_backup "glossary.json"
+    create_backup "highScore.json"
     exit 0
 fi
 

@@ -76,7 +76,10 @@ def main(terms_file, score_file):
     metadata = dict(list(glossary_items)[:4])
     data = list(glossary_items)[4:]
 
-    for _ in range(len(data)):
+    # TODOS
+    # add in a highScore Tab when taking a test
+
+    for _ in range(len(data) * 3):
         console.clear()  # Just to start the program with a fresh console
         item = question(used_keys=answered_questions, content=data)
         header_title = Text(
@@ -90,7 +93,7 @@ def main(terms_file, score_file):
         print("\n")
         print("\n")
         print(
-            Panel(
+            Panel.fit(
                 score_head,
                 title=header_title,
             )
