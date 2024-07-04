@@ -1,4 +1,5 @@
 *.bak
 arch/
-
+glossary.*
 cranbk.log
+highscore.json.bak
