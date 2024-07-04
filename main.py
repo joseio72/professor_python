@@ -17,7 +17,7 @@ from rich.traceback import install
 from rich.panel import Panel
 
 install(show_locals=True)
-GLOSSARY_FILENAME = "glossary.json"
+DICTON_FILE = "dictionary_compact.json"
 SCORECARD_FILENAME = "highScore.json"
 
 
@@ -57,7 +57,8 @@ def question(
             or alternatives_index in used_alternate_indexs
         ):
             continue
-        question["alternatives"].append(content[alternatives_index][not set_up])
+        question["alternatives"].append(
+            content[alternatives_index][not set_up])
         used_alternate_indexs.append(alternatives_index)
         i += 1
     return question
@@ -107,16 +108,20 @@ def main(terms_file, score_file):
 
         item["alternatives"].insert(correct_index, item["key"])
 
-        multiple_choices = list(zip(["a", "b", "c", "d"], item["alternatives"]))
+        multiple_choices = list(
+            zip(["a", "b", "c", "d"], item["alternatives"]))
 
         for choice in range(len(multiple_choices)):
-            multiple_choice_option = Text(multiple_choices[choice][1], justify="center")
+            multiple_choice_option = Text(
+                multiple_choices[choice][1], justify="center")
             print("\n")
-            print(Panel(multiple_choice_option, title=multiple_choices[choice][0]))
+            print(Panel(multiple_choice_option,
+                  title=multiple_choices[choice][0]))
 
         rich_confirm = False
         while not rich_confirm:
-            prompt_answer = Prompt.ask("ans?", choices=["a", "b", "c", "d", "exit"])
+            prompt_answer = Prompt.ask(
+                "ans?", choices=["a", "b", "c", "d", "exit"])
 
             if prompt_answer == "exit":
                 # save and close.
@@ -125,7 +130,8 @@ def main(terms_file, score_file):
                 break
 
             rich_confirm = Prompt.ask(
-                f"Type {prompt_answer} again to confirm you answer {prompt_answer}"
+                f"Type {prompt_answer} again to confirm you answer {
+                    prompt_answer}"
             )
 
             if prompt_answer != rich_confirm:
@@ -182,12 +188,13 @@ def main(terms_file, score_file):
 if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
     files_in_dir = os.listdir(script_dir)
-    if GLOSSARY_FILENAME in files_in_dir and SCORECARD_FILENAME in files_in_dir:
+    if DICTON_FILE in files_in_dir and SCORECARD_FILENAME in files_in_dir:
         score_file_path = os.path.join(script_dir, SCORECARD_FILENAME)
-        terms_file_path = os.path.join(script_dir, GLOSSARY_FILENAME)
+        terms_file_path = os.path.join(script_dir, DICTON_FILE)
 
         main(terms_file=terms_file_path, score_file=score_file_path)
     else:
         print(
-            f"'{GLOSSARY_FILENAME}' or '{SCORECARD_FILENAME}' not found in the directory."
+            f"'{DICTON_FILE}' or '{
+                SCORECARD_FILENAME}' not found in the directory."
         )
